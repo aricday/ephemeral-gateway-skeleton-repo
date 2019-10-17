@@ -22,11 +22,13 @@ subprojects {
     if (!project.name.equals('deployment')) {
         apply plugin: 'com.ca.apim.gateway.gateway-export-plugin'
         GatewayConnection {
-            url = 'https://localhost:8443/restman'
+            url = 'https://gw1.gcp.day.apim.ca.com:8443/restman'
+            userName = 'admin'
+            userPass = 'CAdemo123'
         }
     }
 
-    group '<my.group.id>'
+    group 'cicd_group'
     version = '1.0.0'
 
     repositories {
