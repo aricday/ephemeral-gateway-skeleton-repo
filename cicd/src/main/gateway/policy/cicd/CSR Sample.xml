@@ -1,0 +1,1242 @@
+<wsp:Policy xmlns:wsp="http://schemas.xmlsoap.org/ws/2002/12/policy" xmlns:L7p="http://www.layer7tech.com/ws/policy">
+    <wsp:All wsp:Usage="Required">
+        <L7p:SetVariable>
+            <L7p:Expression><![CDATA[false]]></L7p:Expression>
+            <L7p:VariableToSet stringValue="exitPolicy"/>
+        </L7p:SetVariable>
+        <L7p:AuditDetailAssertion>
+            <L7p:Detail stringValue="${request.http.method}  ${request.url}"/>
+        </L7p:AuditDetailAssertion>
+        <wsp:OneOrMore wsp:Usage="Required">
+            <wsp:All wsp:Usage="Required">
+                <L7p:ComparisonAssertion>
+                    <L7p:CaseSensitive booleanValue="false"/>
+                    <L7p:Expression1 stringValue="${exitPolicy}"/>
+                    <L7p:Operator operatorNull="null"/>
+                    <L7p:Predicates predicates="included">
+                        <L7p:item dataType="included">
+                            <L7p:Type variableDataType="boolean"/>
+                        </L7p:item>
+                        <L7p:item binary="included">
+                            <L7p:CaseSensitive booleanValue="false"/>
+                            <L7p:RightValue stringValue="false"/>
+                        </L7p:item>
+                    </L7p:Predicates>
+                </L7p:ComparisonAssertion>
+                <L7p:ComparisonAssertion>
+                    <L7p:Expression1 stringValue="${request.url.path}"/>
+                    <L7p:Expression2 stringValue="/proxy/access/denied"/>
+                    <L7p:Predicates predicates="included">
+                        <L7p:item binary="included">
+                            <L7p:RightValue stringValue="/proxy/access/denied"/>
+                        </L7p:item>
+                    </L7p:Predicates>
+                </L7p:ComparisonAssertion>
+                <L7p:SetVariable>
+                    <L7p:Expression><![CDATA[true]]></L7p:Expression>
+                    <L7p:VariableToSet stringValue="exitPolicy"/>
+                </L7p:SetVariable>
+                <L7p:HardcodedResponse>
+                    <L7p:ResponseBody><![CDATA[<html>
+<body>
+   <h1>Access Denied</h1>
+   <p>Your access to this site has been denied. Please contact your help desk at 555-123-4567 for additional information and assistance.</p>
+</body>
+</html>]]></L7p:ResponseBody>
+                    <L7p:ResponseContentType stringValue="text/html; charset=UTF-8"/>
+                </L7p:HardcodedResponse>
+                <L7p:assertionComment>
+                    <L7p:Properties mapValue="included">
+                        <L7p:entry>
+                            <L7p:key stringValue="RIGHT.COMMENT"/>
+                            <L7p:value stringValue="// Proxy get access denied page"/>
+                        </L7p:entry>
+                    </L7p:Properties>
+                </L7p:assertionComment>
+            </wsp:All>
+            <wsp:All wsp:Usage="Required">
+                <L7p:ComparisonAssertion>
+                    <L7p:CaseSensitive booleanValue="false"/>
+                    <L7p:Expression1 stringValue="${exitPolicy}"/>
+                    <L7p:Operator operatorNull="null"/>
+                    <L7p:Predicates predicates="included">
+                        <L7p:item dataType="included">
+                            <L7p:Type variableDataType="boolean"/>
+                        </L7p:item>
+                        <L7p:item binary="included">
+                            <L7p:CaseSensitive booleanValue="false"/>
+                            <L7p:RightValue stringValue="false"/>
+                        </L7p:item>
+                    </L7p:Predicates>
+                </L7p:ComparisonAssertion>
+                <L7p:ComparisonAssertion>
+                    <L7p:Expression1 stringValue="${request.url.path}"/>
+                    <L7p:Expression2 stringValue="/proxy/code/request"/>
+                    <L7p:Predicates predicates="included">
+                        <L7p:item binary="included">
+                            <L7p:RightValue stringValue="/proxy/code/request"/>
+                        </L7p:item>
+                    </L7p:Predicates>
+                </L7p:ComparisonAssertion>
+                <L7p:ComparisonAssertion>
+                    <L7p:Expression1 stringValue="${request.http.method}"/>
+                    <L7p:Expression2 stringValue="GET"/>
+                    <L7p:Predicates predicates="included">
+                        <L7p:item binary="included">
+                            <L7p:RightValue stringValue="GET"/>
+                        </L7p:item>
+                    </L7p:Predicates>
+                </L7p:ComparisonAssertion>
+                <L7p:SetVariable>
+                    <L7p:Expression><![CDATA[true]]></L7p:Expression>
+                    <L7p:VariableToSet stringValue="exitPolicy"/>
+                </L7p:SetVariable>
+                <L7p:SslAssertion/>
+                <L7p:HttpBasic/>
+                <wsp:OneOrMore wsp:Usage="Required">
+                    <wsp:All wsp:Usage="Required">
+                        <wsp:OneOrMore wsp:Usage="Required">
+                            <L7p:MemberOfGroup>
+                                <L7p:GroupId stringValue="cb90ba54ff1d684ca0929546b992cba2"/>
+                                <L7p:GroupName stringValue="certs"/>
+                                <L7p:IdentityProviderOid goidValue="0000000000000000fffffffffffffffe"/>
+                            </L7p:MemberOfGroup>
+                            <L7p:SpecificUser>
+                                <L7p:IdentityProviderOid goidValue="0000000000000000fffffffffffffffe"/>
+                                <L7p:UserLogin stringValue="admin"/>
+                                <L7p:UserName stringValue="admin"/>
+                                <L7p:UserUid stringValue="00000000000000000000000000000003"/>
+                            </L7p:SpecificUser>
+                        </wsp:OneOrMore>
+                        <L7p:HardcodedResponse>
+                            <L7p:ResponseBody><![CDATA[<html>
+<body>
+   <h1>Request Validation Code</h1>
+   <form action="${request.url.protocol}://${request.url.host}/proxy/code/request" method="POST">
+      <p>If you've been redirected to this page, it's because you need a private key for mutual auth SSL to access web applications through the proxy.</p>
+      <p>Please enter a valid email address in the field below, and then click the Submit button. A validation code will be sent to that email address. You will be asked to enter the validation code that you receive on the next page.</p>
+      <table>
+         <tr><td>Email Address</td><td><input type="text" name="email"/></td></tr>
+         <tr><td><input type="submit" value="Submit"/></td><td/>
+      </table>
+   </form>
+</body>
+</html>]]></L7p:ResponseBody>
+                            <L7p:ResponseContentType stringValue="text/html; charset=UTF-8"/>
+                        </L7p:HardcodedResponse>
+                        <L7p:assertionComment>
+                            <L7p:Properties mapValue="included">
+                                <L7p:entry>
+                                    <L7p:key stringValue="RIGHT.COMMENT"/>
+                                    <L7p:value stringValue="// User is authorized"/>
+                                </L7p:entry>
+                            </L7p:Properties>
+                        </L7p:assertionComment>
+                    </wsp:All>
+                    <wsp:All wsp:Usage="Required">
+                        <L7p:HardcodedResponse>
+                            <L7p:AssertionComment assertionComment="included">
+                                <L7p:Properties mapValue="included">
+                                    <L7p:entry>
+                                        <L7p:key stringValue="RIGHT.COMMENT"/>
+                                        <L7p:value stringValue="// Return HTTP 302 redirect response"/>
+                                    </L7p:entry>
+                                </L7p:Properties>
+                            </L7p:AssertionComment>
+                            <L7p:ResponseStatus stringValue="302"/>
+                        </L7p:HardcodedResponse>
+                        <L7p:AddHeader>
+                            <L7p:HeaderName stringValue="Location"/>
+                            <L7p:HeaderValue stringValue="http://${request.url.host}/proxy/access/denied"/>
+                            <L7p:Target target="RESPONSE"/>
+                        </L7p:AddHeader>
+                        <L7p:assertionComment>
+                            <L7p:Properties mapValue="included">
+                                <L7p:entry>
+                                    <L7p:key stringValue="RIGHT.COMMENT"/>
+                                    <L7p:value stringValue="// Redirect to access denied page"/>
+                                </L7p:entry>
+                            </L7p:Properties>
+                        </L7p:assertionComment>
+                    </wsp:All>
+                    <L7p:assertionComment>
+                        <L7p:Properties mapValue="included">
+                            <L7p:entry>
+                                <L7p:key stringValue="RIGHT.COMMENT"/>
+                                <L7p:value stringValue="// Either user is authorized or server redirect to access denied page"/>
+                            </L7p:entry>
+                        </L7p:Properties>
+                    </L7p:assertionComment>
+                </wsp:OneOrMore>
+                <L7p:assertionComment>
+                    <L7p:Properties mapValue="included">
+                        <L7p:entry>
+                            <L7p:key stringValue="RIGHT.COMMENT"/>
+                            <L7p:value stringValue="// Proxy get request validation code page"/>
+                        </L7p:entry>
+                    </L7p:Properties>
+                </L7p:assertionComment>
+            </wsp:All>
+            <wsp:All wsp:Usage="Required">
+                <L7p:ComparisonAssertion>
+                    <L7p:CaseSensitive booleanValue="false"/>
+                    <L7p:Expression1 stringValue="${exitPolicy}"/>
+                    <L7p:Operator operatorNull="null"/>
+                    <L7p:Predicates predicates="included">
+                        <L7p:item dataType="included">
+                            <L7p:Type variableDataType="boolean"/>
+                        </L7p:item>
+                        <L7p:item binary="included">
+                            <L7p:CaseSensitive booleanValue="false"/>
+                            <L7p:RightValue stringValue="false"/>
+                        </L7p:item>
+                    </L7p:Predicates>
+                </L7p:ComparisonAssertion>
+                <L7p:ComparisonAssertion>
+                    <L7p:Expression1 stringValue="${request.url.path}"/>
+                    <L7p:Expression2 stringValue="/proxy/code/request"/>
+                    <L7p:Predicates predicates="included">
+                        <L7p:item binary="included">
+                            <L7p:RightValue stringValue="/proxy/code/request"/>
+                        </L7p:item>
+                    </L7p:Predicates>
+                </L7p:ComparisonAssertion>
+                <L7p:ComparisonAssertion>
+                    <L7p:Expression1 stringValue="${request.http.method}"/>
+                    <L7p:Expression2 stringValue="POST"/>
+                    <L7p:Predicates predicates="included">
+                        <L7p:item binary="included">
+                            <L7p:RightValue stringValue="POST"/>
+                        </L7p:item>
+                    </L7p:Predicates>
+                </L7p:ComparisonAssertion>
+                <L7p:SetVariable>
+                    <L7p:Expression><![CDATA[true]]></L7p:Expression>
+                    <L7p:VariableToSet stringValue="exitPolicy"/>
+                </L7p:SetVariable>
+                <L7p:SslAssertion/>
+                <L7p:HttpBasic/>
+                <wsp:OneOrMore wsp:Usage="Required">
+                    <wsp:All wsp:Usage="Required">
+                        <wsp:OneOrMore wsp:Usage="Required">
+                            <L7p:MemberOfGroup>
+                                <L7p:GroupId stringValue="cb90ba54ff1d684ca0929546b992cba2"/>
+                                <L7p:GroupName stringValue="certs"/>
+                                <L7p:IdentityProviderOid goidValue="0000000000000000fffffffffffffffe"/>
+                            </L7p:MemberOfGroup>
+                            <L7p:SpecificUser>
+                                <L7p:IdentityProviderOid goidValue="0000000000000000fffffffffffffffe"/>
+                                <L7p:UserLogin stringValue="admin"/>
+                                <L7p:UserName stringValue="admin"/>
+                                <L7p:UserUid stringValue="00000000000000000000000000000003"/>
+                            </L7p:SpecificUser>
+                        </wsp:OneOrMore>
+                        <L7p:UUIDGenerator>
+                            <L7p:TargetVariable stringValue="code"/>
+                        </L7p:UUIDGenerator>
+                        <L7p:CacheStorage>
+                            <L7p:CacheEntryKey stringValue="${request.username}${request.password}"/>
+                            <L7p:CacheId stringValue="ValidationCodeCache"/>
+                            <L7p:MaxEntries stringValue="1000"/>
+                            <L7p:OtherTargetMessageVariable stringValue="code"/>
+                            <L7p:Target target="OTHER"/>
+                        </L7p:CacheStorage>
+                        <L7p:Email>
+                            <L7p:Base64message stringValue="SGVyZSBpcyB5b3VyIHJlcXVlc3RlZCB2YWxpZGF0aW9uIGNvZGU6Cgoke2NvZGV9Cg=="/>
+                            <L7p:SmtpHost stringValue="138.133.233.115"/>
+                            <L7p:SourceEmailAddress stringValue="noreply@amgen.com"/>
+                            <L7p:Subject stringValue="Validation Code"/>
+                            <L7p:TargetEmailAddress stringValue="${request.http.parameter.email}"/>
+                        </L7p:Email>
+                        <L7p:HardcodedResponse>
+                            <L7p:ResponseBody><![CDATA[<html>
+<body>
+   <h1>Submit Validation Code</h1>
+   <form action="${request.url.protocol}://${request.url.host}:${request.url.port}/proxy/code/validate" method="POST">
+      <p>Please paste the validation code that was emailed to you into the field below, and then click the Submit button.</p>
+      <p>If the submitted code is valid, the proxy will present you with a private key that can be used to access web applications through the proxy using mutual auth SSL.</p>
+      <p>Install the private key by opening it, or saving and then opening it, to be presented with a standard key install dialog. </p>
+      <p>Note: Your AD password is used to secure the private key file that will be downloaded next.</p>
+      <table>
+         <tr><td>Validation Code:</td><td><input type="text" name="code"/></td></tr>
+         <tr><td><input type="submit" value="Submit"/></td><td/>
+      </table>
+   </form>
+</body>
+</html>]]></L7p:ResponseBody>
+                            <L7p:ResponseContentType stringValue="text/html; charset=UTF-8"/>
+                        </L7p:HardcodedResponse>
+                        <L7p:assertionComment>
+                            <L7p:Properties mapValue="included">
+                                <L7p:entry>
+                                    <L7p:key stringValue="RIGHT.COMMENT"/>
+                                    <L7p:value stringValue="// User is authorized and validation code is successfully sent via email"/>
+                                </L7p:entry>
+                            </L7p:Properties>
+                        </L7p:assertionComment>
+                    </wsp:All>
+                    <wsp:All wsp:Usage="Required">
+                        <L7p:HardcodedResponse>
+                            <L7p:AssertionComment assertionComment="included">
+                                <L7p:Properties mapValue="included">
+                                    <L7p:entry>
+                                        <L7p:key stringValue="RIGHT.COMMENT"/>
+                                        <L7p:value stringValue="// Return HTTP 302 redirect response"/>
+                                    </L7p:entry>
+                                </L7p:Properties>
+                            </L7p:AssertionComment>
+                            <L7p:ResponseStatus stringValue="302"/>
+                        </L7p:HardcodedResponse>
+                        <L7p:AddHeader>
+                            <L7p:HeaderName stringValue="Location"/>
+                            <L7p:HeaderValue stringValue="http://${request.url.host}/proxy/access/denied"/>
+                            <L7p:Target target="RESPONSE"/>
+                        </L7p:AddHeader>
+                        <L7p:assertionComment>
+                            <L7p:Properties mapValue="included">
+                                <L7p:entry>
+                                    <L7p:key stringValue="RIGHT.COMMENT"/>
+                                    <L7p:value stringValue="// Redirect to access denied page"/>
+                                </L7p:entry>
+                            </L7p:Properties>
+                        </L7p:assertionComment>
+                    </wsp:All>
+                    <L7p:assertionComment>
+                        <L7p:Properties mapValue="included">
+                            <L7p:entry>
+                                <L7p:key stringValue="RIGHT.COMMENT"/>
+                                <L7p:value stringValue="// Either user is authorized and validation code is successfully sent via email; or server redirect to access denied page"/>
+                            </L7p:entry>
+                        </L7p:Properties>
+                    </L7p:assertionComment>
+                </wsp:OneOrMore>
+                <L7p:assertionComment>
+                    <L7p:Properties mapValue="included">
+                        <L7p:entry>
+                            <L7p:key stringValue="RIGHT.COMMENT"/>
+                            <L7p:value stringValue="// Proxy post request validation code page"/>
+                        </L7p:entry>
+                    </L7p:Properties>
+                </L7p:assertionComment>
+            </wsp:All>
+            <wsp:All wsp:Usage="Required">
+                <L7p:ComparisonAssertion>
+                    <L7p:CaseSensitive booleanValue="false"/>
+                    <L7p:Expression1 stringValue="${exitPolicy}"/>
+                    <L7p:Operator operatorNull="null"/>
+                    <L7p:Predicates predicates="included">
+                        <L7p:item dataType="included">
+                            <L7p:Type variableDataType="boolean"/>
+                        </L7p:item>
+                        <L7p:item binary="included">
+                            <L7p:CaseSensitive booleanValue="false"/>
+                            <L7p:RightValue stringValue="false"/>
+                        </L7p:item>
+                    </L7p:Predicates>
+                </L7p:ComparisonAssertion>
+                <L7p:ComparisonAssertion>
+                    <L7p:Expression1 stringValue="${request.url.path}"/>
+                    <L7p:Expression2 stringValue="/proxy/code/validate"/>
+                    <L7p:Predicates predicates="included">
+                        <L7p:item binary="included">
+                            <L7p:RightValue stringValue="/proxy/code/validate"/>
+                        </L7p:item>
+                    </L7p:Predicates>
+                </L7p:ComparisonAssertion>
+                <L7p:ComparisonAssertion>
+                    <L7p:Expression1 stringValue="${request.http.method}"/>
+                    <L7p:Expression2 stringValue="POST"/>
+                    <L7p:Predicates predicates="included">
+                        <L7p:item binary="included">
+                            <L7p:RightValue stringValue="POST"/>
+                        </L7p:item>
+                    </L7p:Predicates>
+                </L7p:ComparisonAssertion>
+                <L7p:SetVariable>
+                    <L7p:Expression><![CDATA[true]]></L7p:Expression>
+                    <L7p:VariableToSet stringValue="exitPolicy"/>
+                </L7p:SetVariable>
+                <L7p:SslAssertion/>
+                <L7p:HttpBasic/>
+                <wsp:OneOrMore wsp:Usage="Required">
+                    <wsp:All wsp:Usage="Required">
+                        <wsp:OneOrMore wsp:Usage="Required">
+                            <L7p:MemberOfGroup>
+                                <L7p:GroupId stringValue="cb90ba54ff1d684ca0929546b992cba2"/>
+                                <L7p:GroupName stringValue="certs"/>
+                                <L7p:IdentityProviderOid goidValue="0000000000000000fffffffffffffffe"/>
+                            </L7p:MemberOfGroup>
+                            <L7p:SpecificUser>
+                                <L7p:IdentityProviderOid goidValue="0000000000000000fffffffffffffffe"/>
+                                <L7p:UserLogin stringValue="admin"/>
+                                <L7p:UserName stringValue="admin"/>
+                                <L7p:UserUid stringValue="00000000000000000000000000000003"/>
+                            </L7p:SpecificUser>
+                        </wsp:OneOrMore>
+                        <L7p:CacheLookup>
+                            <L7p:CacheEntryKey stringValue="${request.username}${request.password}"/>
+                            <L7p:CacheId stringValue="ValidationCodeCache"/>
+                            <L7p:ContentTypeOverride stringValue=""/>
+                            <L7p:OtherTargetMessageVariable stringValue="code"/>
+                            <L7p:Target target="OTHER"/>
+                        </L7p:CacheLookup>
+                        <L7p:ComparisonAssertion>
+                            <L7p:Expression1 stringValue="${code.mainpart}"/>
+                            <L7p:Expression2 stringValue="${request.http.parameter.code}"/>
+                            <L7p:Predicates predicates="included">
+                                <L7p:item binary="included">
+                                    <L7p:RightValue stringValue="${request.http.parameter.code}"/>
+                                </L7p:item>
+                            </L7p:Predicates>
+                        </L7p:ComparisonAssertion>
+                        <wsp:All wsp:Usage="Required">
+                            <L7p:SetVariable>
+                                <L7p:Expression><![CDATA[00000000000000000000000000000002]]></L7p:Expression>
+                                <L7p:VariableToSet stringValue="keystore.id"/>
+                            </L7p:SetVariable>
+                            <L7p:SetVariable>
+                                <L7p:Expression><![CDATA[${keystore.id}:${request.username}]]></L7p:Expression>
+                                <L7p:VariableToSet stringValue="key.id"/>
+                            </L7p:SetVariable>
+                            <L7p:SetVariable>
+                                <L7p:Expression><![CDATA[${keystore.id}:ca_msso]]></L7p:Expression>
+                                <L7p:VariableToSet stringValue="signer.id"/>
+                            </L7p:SetVariable>
+                            <L7p:SetVariable>
+                                <L7p:Expression><![CDATA[&lt;l7:PrivateKeyCreationContext xmlns:l7=&quot;http://ns.l7tech.com/2010/04/gateway-management&quot;&gt;
+	&lt;l7:Dn&gt;CN=${request.username}&lt;/l7:Dn&gt;
+	&lt;l7:Properties&gt;
+		&lt;l7:Property key=&quot;daysUntilExpiry&quot;&gt;
+			&lt;l7:IntegerValue&gt;365&lt;/l7:IntegerValue&gt;
+		&lt;/l7:Property&gt;
+		&lt;l7:Property key=&quot;rsaKeySize&quot;&gt;
+			&lt;l7:IntegerValue&gt;2048&lt;/l7:IntegerValue&gt;
+		&lt;/l7:Property&gt;
+		&lt;l7:Property key=&quot;signatureHashAlgorithm&quot;&gt;
+			&lt;l7:StringValue&gt;SHA384&lt;/l7:StringValue&gt;
+		&lt;/l7:Property&gt;
+	&lt;/l7:Properties&gt;
+&lt;/l7:PrivateKeyCreationContext&gt;]]></L7p:Expression>
+                                <L7p:ContentType stringValue="application/xml; charset=utf-8"/>
+                                <L7p:DataType variableDataType="message"/>
+                                <L7p:VariableToSet stringValue="createKeyRequest"/>
+                            </L7p:SetVariable>
+                            <L7p:HttpRoutingAssertion>
+                                <L7p:AssertionComment assertionComment="included">
+                                    <L7p:Properties mapValue="included">
+                                        <L7p:entry>
+                                            <L7p:key stringValue="RIGHT.COMMENT"/>
+                                            <L7p:value stringValue="// Create Key"/>
+                                        </L7p:entry>
+                                    </L7p:Properties>
+                                </L7p:AssertionComment>
+                                <L7p:HttpMethod httpMethod="POST"/>
+                                <L7p:ProtectedServiceUrl stringValue="https://localhost:8443/restman/1.0/privateKeys/${key.id}"/>
+                                <L7p:ProxyPassword stringValueNull="null"/>
+                                <L7p:ProxyUsername stringValueNull="null"/>
+                                <L7p:RequestHeaderRules httpPassthroughRuleSet="included">
+                                    <L7p:ForwardAll booleanValue="true"/>
+                                    <L7p:Rules httpPassthroughRules="included">
+                                        <L7p:item httpPassthroughRule="included">
+                                            <L7p:Name stringValue="Cookie"/>
+                                        </L7p:item>
+                                        <L7p:item httpPassthroughRule="included">
+                                            <L7p:Name stringValue="SOAPAction"/>
+                                        </L7p:item>
+                                    </L7p:Rules>
+                                </L7p:RequestHeaderRules>
+                                <L7p:RequestMsgSrc stringValue="createKeyRequest"/>
+                                <L7p:RequestParamRules httpPassthroughRuleSet="included">
+                                    <L7p:ForwardAll booleanValue="true"/>
+                                    <L7p:Rules httpPassthroughRules="included"/>
+                                </L7p:RequestParamRules>
+                                <L7p:ResponseHeaderRules httpPassthroughRuleSet="included">
+                                    <L7p:ForwardAll booleanValue="true"/>
+                                    <L7p:Rules httpPassthroughRules="included">
+                                        <L7p:item httpPassthroughRule="included">
+                                            <L7p:Name stringValue="Set-Cookie"/>
+                                        </L7p:item>
+                                    </L7p:Rules>
+                                </L7p:ResponseHeaderRules>
+                                <L7p:SamlAssertionVersion intValue="2"/>
+                            </L7p:HttpRoutingAssertion>
+                            <L7p:HttpRoutingAssertion>
+                                <L7p:AssertionComment assertionComment="included">
+                                    <L7p:Properties mapValue="included">
+                                        <L7p:entry>
+                                            <L7p:key stringValue="RIGHT.COMMENT"/>
+                                            <L7p:value stringValue="// Generate CSR"/>
+                                        </L7p:entry>
+                                    </L7p:Properties>
+                                </L7p:AssertionComment>
+                                <L7p:HttpMethod httpMethod="GET"/>
+                                <L7p:ProtectedServiceUrl stringValue="https://localhost:8443/restman/1.0/privateKeys/${key.id}/generateCSR"/>
+                                <L7p:ProxyPassword stringValueNull="null"/>
+                                <L7p:ProxyUsername stringValueNull="null"/>
+                                <L7p:RequestHeaderRules httpPassthroughRuleSet="included">
+                                    <L7p:ForwardAll booleanValue="true"/>
+                                    <L7p:Rules httpPassthroughRules="included">
+                                        <L7p:item httpPassthroughRule="included">
+                                            <L7p:Name stringValue="Cookie"/>
+                                        </L7p:item>
+                                        <L7p:item httpPassthroughRule="included">
+                                            <L7p:Name stringValue="SOAPAction"/>
+                                        </L7p:item>
+                                    </L7p:Rules>
+                                </L7p:RequestHeaderRules>
+                                <L7p:RequestParamRules httpPassthroughRuleSet="included">
+                                    <L7p:ForwardAll booleanValue="true"/>
+                                    <L7p:Rules httpPassthroughRules="included"/>
+                                </L7p:RequestParamRules>
+                                <L7p:ResponseHeaderRules httpPassthroughRuleSet="included">
+                                    <L7p:ForwardAll booleanValue="true"/>
+                                    <L7p:Rules httpPassthroughRules="included">
+                                        <L7p:item httpPassthroughRule="included">
+                                            <L7p:Name stringValue="Set-Cookie"/>
+                                        </L7p:item>
+                                    </L7p:Rules>
+                                </L7p:ResponseHeaderRules>
+                                <L7p:ResponseMsgDest stringValue="generateCsrResponse"/>
+                                <L7p:SamlAssertionVersion intValue="2"/>
+                            </L7p:HttpRoutingAssertion>
+                            <L7p:ResponseXpathAssertion>
+                                <L7p:VariablePrefix stringValue="csrData"/>
+                                <L7p:XmlMsgSrc stringValue="generateCsrResponse"/>
+                                <L7p:XpathExpression xpathExpressionValue="included">
+                                    <L7p:Expression stringValue="/l7:Item/l7:Resource/l7:PrivateKeyGenerateCsrResult/l7:CsrData"/>
+                                    <L7p:Namespaces mapValue="included">
+                                        <L7p:entry>
+                                            <L7p:key stringValue="s"/>
+                                            <L7p:value stringValue="http://schemas.xmlsoap.org/soap/envelope/"/>
+                                        </L7p:entry>
+                                        <L7p:entry>
+                                            <L7p:key stringValue="l7"/>
+                                            <L7p:value stringValue="http://ns.l7tech.com/2010/04/gateway-management"/>
+                                        </L7p:entry>
+                                    </L7p:Namespaces>
+                                    <L7p:XpathVersion xpathVersion="XPATH_1_0"/>
+                                </L7p:XpathExpression>
+                            </L7p:ResponseXpathAssertion>
+                            <L7p:SetVariable>
+                                <L7p:Expression><![CDATA[${csrData.result}]]></L7p:Expression>
+                                <L7p:ContentType stringValue="application/x-pem-file"/>
+                                <L7p:DataType variableDataType="message"/>
+                                <L7p:VariableToSet stringValue="signCertRequest"/>
+                            </L7p:SetVariable>
+                            <L7p:HttpRoutingAssertion>
+                                <L7p:AssertionComment assertionComment="included">
+                                    <L7p:Properties mapValue="included">
+                                        <L7p:entry>
+                                            <L7p:key stringValue="RIGHT.COMMENT"/>
+                                            <L7p:value stringValue="// Sign Cert"/>
+                                        </L7p:entry>
+                                    </L7p:Properties>
+                                </L7p:AssertionComment>
+                                <L7p:HttpMethod httpMethod="PUT"/>
+                                <L7p:ProtectedServiceUrl stringValue="https://localhost:8443/restman/1.0/privateKeys/${signer.id}/signCert"/>
+                                <L7p:ProxyPassword stringValueNull="null"/>
+                                <L7p:ProxyUsername stringValueNull="null"/>
+                                <L7p:RequestHeaderRules httpPassthroughRuleSet="included">
+                                    <L7p:ForwardAll booleanValue="true"/>
+                                    <L7p:Rules httpPassthroughRules="included">
+                                        <L7p:item httpPassthroughRule="included">
+                                            <L7p:Name stringValue="Cookie"/>
+                                        </L7p:item>
+                                        <L7p:item httpPassthroughRule="included">
+                                            <L7p:Name stringValue="SOAPAction"/>
+                                        </L7p:item>
+                                    </L7p:Rules>
+                                </L7p:RequestHeaderRules>
+                                <L7p:RequestMsgSrc stringValue="signCertRequest"/>
+                                <L7p:RequestParamRules httpPassthroughRuleSet="included">
+                                    <L7p:ForwardAll booleanValue="true"/>
+                                    <L7p:Rules httpPassthroughRules="included"/>
+                                </L7p:RequestParamRules>
+                                <L7p:ResponseHeaderRules httpPassthroughRuleSet="included">
+                                    <L7p:ForwardAll booleanValue="true"/>
+                                    <L7p:Rules httpPassthroughRules="included">
+                                        <L7p:item httpPassthroughRule="included">
+                                            <L7p:Name stringValue="Set-Cookie"/>
+                                        </L7p:item>
+                                    </L7p:Rules>
+                                </L7p:ResponseHeaderRules>
+                                <L7p:ResponseMsgDest stringValue="signCertResponse"/>
+                                <L7p:SamlAssertionVersion intValue="2"/>
+                            </L7p:HttpRoutingAssertion>
+                            <L7p:ResponseXpathAssertion>
+                                <L7p:VariablePrefix stringValue="certs"/>
+                                <L7p:XmlMsgSrc stringValue="signCertResponse"/>
+                                <L7p:XpathExpression xpathExpressionValue="included">
+                                    <L7p:Expression stringValue="/l7:Item/l7:Resource/l7:PrivateKeySignCsrResult/l7:CertData"/>
+                                    <L7p:Namespaces mapValue="included">
+                                        <L7p:entry>
+                                            <L7p:key stringValue="s"/>
+                                            <L7p:value stringValue="http://schemas.xmlsoap.org/soap/envelope/"/>
+                                        </L7p:entry>
+                                        <L7p:entry>
+                                            <L7p:key stringValue="l7"/>
+                                            <L7p:value stringValue="http://ns.l7tech.com/2010/04/gateway-management"/>
+                                        </L7p:entry>
+                                    </L7p:Namespaces>
+                                    <L7p:XpathVersion xpathVersion="XPATH_1_0"/>
+                                </L7p:XpathExpression>
+                            </L7p:ResponseXpathAssertion>
+                            <L7p:Regex>
+                                <L7p:AutoTarget booleanValue="false"/>
+                                <L7p:OtherTargetMessageVariable stringValue="certs.result"/>
+                                <L7p:Regex stringValue="&amp;#xD;"/>
+                                <L7p:RegexName stringValue="Remove escaped carriage returns"/>
+                                <L7p:Replace booleanValue="true"/>
+                                <L7p:Replacement stringValue=""/>
+                                <L7p:Target target="OTHER"/>
+                            </L7p:Regex>
+                            <L7p:Regex>
+                                <L7p:AutoTarget booleanValue="false"/>
+                                <L7p:CaptureVar stringValue="certs"/>
+                                <L7p:FindAll booleanValue="true"/>
+                                <L7p:OtherTargetMessageVariable stringValue="certs.result"/>
+                                <L7p:Regex stringValue="-----BEGIN CERTIFICATE-----[^-]*-----END CERTIFICATE-----"/>
+                                <L7p:RegexName stringValue="Select certificates"/>
+                                <L7p:Replacement stringValue=""/>
+                                <L7p:Target target="OTHER"/>
+                            </L7p:Regex>
+                            <L7p:SetVariable>
+                                <L7p:Expression/>
+                                <L7p:VariableToSet stringValue="certData"/>
+                            </L7p:SetVariable>
+                            <L7p:ForEachLoop L7p:Usage="Required" loopVariable="certs" variablePrefix="cert">
+                                <L7p:Regex>
+                                    <L7p:AutoTarget booleanValue="false"/>
+                                    <L7p:OtherTargetMessageVariable stringValue="cert.current"/>
+                                    <L7p:Regex stringValue="-----BEGIN CERTIFICATE-----|-----END CERTIFICATE-----|\r\n"/>
+                                    <L7p:RegexName stringValue="Transform to Base64 only"/>
+                                    <L7p:Replace booleanValue="true"/>
+                                    <L7p:Replacement stringValue=""/>
+                                    <L7p:Target target="OTHER"/>
+                                </L7p:Regex>
+                                <L7p:EncodeDecode>
+                                    <L7p:CharacterEncoding stringValueNull="null"/>
+                                    <L7p:SourceVariableName stringValue="cert.current"/>
+                                    <L7p:TargetDataType variableDataType="cert"/>
+                                    <L7p:TargetVariableName stringValue="certificate"/>
+                                    <L7p:TransformType transformType="BASE64_DECODE"/>
+                                </L7p:EncodeDecode>
+                                <L7p:SetVariable>
+                                    <L7p:Expression><![CDATA[${certData}
+&lt;l7:CertificateData xmlns:l7=&quot;http://ns.l7tech.com/2010/04/gateway-management&quot;&gt;
+	&lt;l7:IssuerName&gt;${certificate.issuer}&lt;/l7:IssuerName&gt;
+	&lt;l7:SerialNumber&gt;${certificate.serial}&lt;/l7:SerialNumber&gt;
+	&lt;l7:SubjectName&gt;${certificate.subject}&lt;/l7:SubjectName&gt;
+	&lt;l7:Encoded&gt;${certificate.base64}&lt;/l7:Encoded&gt;
+&lt;/l7:CertificateData&gt;]]></L7p:Expression>
+                                    <L7p:VariableToSet stringValue="certData"/>
+                                </L7p:SetVariable>
+                            </L7p:ForEachLoop>
+                            <L7p:SetVariable>
+                                <L7p:Expression><![CDATA[&lt;l7:PrivateKey alias=&quot;${request.username}&quot; keystoreId=&quot;${keystore.id}&quot; id=&quot;${key.id}&quot; xmlns:l7=&quot;http://ns.l7tech.com/2010/04/gateway-management&quot;&gt;
+	&lt;l7:CertificateChain&gt;
+		${certData}
+	&lt;/l7:CertificateChain&gt;
+	&lt;l7:Properties&gt;
+		&lt;l7:Property key=&quot;keyAlgorithm&quot;&gt;
+			&lt;l7:StringValue&gt;RSA&lt;/l7:StringValue&gt;
+		&lt;/l7:Property&gt;
+	&lt;/l7:Properties&gt;
+&lt;/l7:PrivateKey&gt;]]></L7p:Expression>
+                                <L7p:ContentType stringValue="application/xml; charset=utf-8"/>
+                                <L7p:DataType variableDataType="message"/>
+                                <L7p:VariableToSet stringValue="updateKeyRequest"/>
+                            </L7p:SetVariable>
+                            <L7p:HttpRoutingAssertion>
+                                <L7p:AssertionComment assertionComment="included">
+                                    <L7p:Properties mapValue="included">
+                                        <L7p:entry>
+                                            <L7p:key stringValue="RIGHT.COMMENT"/>
+                                            <L7p:value stringValue="// Update Key"/>
+                                        </L7p:entry>
+                                    </L7p:Properties>
+                                </L7p:AssertionComment>
+                                <L7p:HttpMethod httpMethod="PUT"/>
+                                <L7p:ProtectedServiceUrl stringValue="https://localhost:8443/restman/1.0/privateKeys/${key.id}"/>
+                                <L7p:ProxyPassword stringValueNull="null"/>
+                                <L7p:ProxyUsername stringValueNull="null"/>
+                                <L7p:RequestHeaderRules httpPassthroughRuleSet="included">
+                                    <L7p:ForwardAll booleanValue="true"/>
+                                    <L7p:Rules httpPassthroughRules="included">
+                                        <L7p:item httpPassthroughRule="included">
+                                            <L7p:Name stringValue="Cookie"/>
+                                        </L7p:item>
+                                        <L7p:item httpPassthroughRule="included">
+                                            <L7p:Name stringValue="SOAPAction"/>
+                                        </L7p:item>
+                                    </L7p:Rules>
+                                </L7p:RequestHeaderRules>
+                                <L7p:RequestMsgSrc stringValue="updateKeyRequest"/>
+                                <L7p:RequestParamRules httpPassthroughRuleSet="included">
+                                    <L7p:ForwardAll booleanValue="true"/>
+                                    <L7p:Rules httpPassthroughRules="included"/>
+                                </L7p:RequestParamRules>
+                                <L7p:ResponseHeaderRules httpPassthroughRuleSet="included">
+                                    <L7p:ForwardAll booleanValue="true"/>
+                                    <L7p:Rules httpPassthroughRules="included">
+                                        <L7p:item httpPassthroughRule="included">
+                                            <L7p:Name stringValue="Set-Cookie"/>
+                                        </L7p:item>
+                                    </L7p:Rules>
+                                </L7p:ResponseHeaderRules>
+                                <L7p:SamlAssertionVersion intValue="2"/>
+                            </L7p:HttpRoutingAssertion>
+                            <L7p:SetVariable>
+                                <L7p:Expression><![CDATA[&lt;l7:PrivateKeyExportContext xmlns:l7=&quot;http://ns.l7tech.com/2010/04/gateway-management&quot;&gt;
+	&lt;l7:Alias&gt;${request.username}&lt;/l7:Alias&gt;
+	&lt;l7:Password&gt;${request.password}&lt;/l7:Password&gt;
+&lt;/l7:PrivateKeyExportContext&gt;]]></L7p:Expression>
+                                <L7p:ContentType stringValue="application/xml; charset=utf-8"/>
+                                <L7p:DataType variableDataType="message"/>
+                                <L7p:VariableToSet stringValue="exportKeyRequest"/>
+                            </L7p:SetVariable>
+                            <L7p:HttpRoutingAssertion>
+                                <L7p:AssertionComment assertionComment="included">
+                                    <L7p:Properties mapValue="included">
+                                        <L7p:entry>
+                                            <L7p:key stringValue="RIGHT.COMMENT"/>
+                                            <L7p:value stringValue="// Export Key"/>
+                                        </L7p:entry>
+                                    </L7p:Properties>
+                                </L7p:AssertionComment>
+                                <L7p:HttpMethod httpMethod="PUT"/>
+                                <L7p:ProtectedServiceUrl stringValue="https://localhost:8443/restman/1.0/privateKeys/${key.id}/export"/>
+                                <L7p:ProxyPassword stringValueNull="null"/>
+                                <L7p:ProxyUsername stringValueNull="null"/>
+                                <L7p:RequestHeaderRules httpPassthroughRuleSet="included">
+                                    <L7p:ForwardAll booleanValue="true"/>
+                                    <L7p:Rules httpPassthroughRules="included">
+                                        <L7p:item httpPassthroughRule="included">
+                                            <L7p:Name stringValue="Cookie"/>
+                                        </L7p:item>
+                                        <L7p:item httpPassthroughRule="included">
+                                            <L7p:Name stringValue="SOAPAction"/>
+                                        </L7p:item>
+                                    </L7p:Rules>
+                                </L7p:RequestHeaderRules>
+                                <L7p:RequestMsgSrc stringValue="exportKeyRequest"/>
+                                <L7p:RequestParamRules httpPassthroughRuleSet="included">
+                                    <L7p:ForwardAll booleanValue="true"/>
+                                    <L7p:Rules httpPassthroughRules="included"/>
+                                </L7p:RequestParamRules>
+                                <L7p:ResponseHeaderRules httpPassthroughRuleSet="included">
+                                    <L7p:ForwardAll booleanValue="true"/>
+                                    <L7p:Rules httpPassthroughRules="included">
+                                        <L7p:item httpPassthroughRule="included">
+                                            <L7p:Name stringValue="Set-Cookie"/>
+                                        </L7p:item>
+                                    </L7p:Rules>
+                                </L7p:ResponseHeaderRules>
+                                <L7p:ResponseMsgDest stringValue="exportKeyResponse"/>
+                                <L7p:SamlAssertionVersion intValue="2"/>
+                            </L7p:HttpRoutingAssertion>
+                            <L7p:HttpRoutingAssertion>
+                                <L7p:AssertionComment assertionComment="included">
+                                    <L7p:Properties mapValue="included">
+                                        <L7p:entry>
+                                            <L7p:key stringValue="RIGHT.COMMENT"/>
+                                            <L7p:value stringValue="// Delete Key"/>
+                                        </L7p:entry>
+                                    </L7p:Properties>
+                                </L7p:AssertionComment>
+                                <L7p:HttpMethod httpMethod="DELETE"/>
+                                <L7p:ProtectedServiceUrl stringValue="https://localhost:8443/restman/1.0/privateKeys/${key.id}"/>
+                                <L7p:ProxyPassword stringValueNull="null"/>
+                                <L7p:ProxyUsername stringValueNull="null"/>
+                                <L7p:RequestHeaderRules httpPassthroughRuleSet="included">
+                                    <L7p:ForwardAll booleanValue="true"/>
+                                    <L7p:Rules httpPassthroughRules="included">
+                                        <L7p:item httpPassthroughRule="included">
+                                            <L7p:Name stringValue="Cookie"/>
+                                        </L7p:item>
+                                        <L7p:item httpPassthroughRule="included">
+                                            <L7p:Name stringValue="SOAPAction"/>
+                                        </L7p:item>
+                                    </L7p:Rules>
+                                </L7p:RequestHeaderRules>
+                                <L7p:RequestParamRules httpPassthroughRuleSet="included">
+                                    <L7p:ForwardAll booleanValue="true"/>
+                                    <L7p:Rules httpPassthroughRules="included"/>
+                                </L7p:RequestParamRules>
+                                <L7p:ResponseHeaderRules httpPassthroughRuleSet="included">
+                                    <L7p:ForwardAll booleanValue="true"/>
+                                    <L7p:Rules httpPassthroughRules="included">
+                                        <L7p:item httpPassthroughRule="included">
+                                            <L7p:Name stringValue="Set-Cookie"/>
+                                        </L7p:item>
+                                    </L7p:Rules>
+                                </L7p:ResponseHeaderRules>
+                                <L7p:SamlAssertionVersion intValue="2"/>
+                            </L7p:HttpRoutingAssertion>
+                            <L7p:ResponseXpathAssertion>
+                                <L7p:VariablePrefix stringValue="keyData"/>
+                                <L7p:XmlMsgSrc stringValue="exportKeyResponse"/>
+                                <L7p:XpathExpression xpathExpressionValue="included">
+                                    <L7p:Expression stringValue="/l7:Item/l7:Resource/l7:PrivateKeyExportResult/l7:Pkcs12Data"/>
+                                    <L7p:Namespaces mapValue="included">
+                                        <L7p:entry>
+                                            <L7p:key stringValue="s"/>
+                                            <L7p:value stringValue="http://schemas.xmlsoap.org/soap/envelope/"/>
+                                        </L7p:entry>
+                                        <L7p:entry>
+                                            <L7p:key stringValue="l7"/>
+                                            <L7p:value stringValue="http://ns.l7tech.com/2010/04/gateway-management"/>
+                                        </L7p:entry>
+                                    </L7p:Namespaces>
+                                    <L7p:XpathVersion xpathVersion="XPATH_1_0"/>
+                                </L7p:XpathExpression>
+                            </L7p:ResponseXpathAssertion>
+                            <L7p:EncodeDecode>
+                                <L7p:CharacterEncoding stringValueNull="null"/>
+                                <L7p:SourceVariableName stringValue="keyData.result"/>
+                                <L7p:TargetContentType stringValue="application/x-pkcs12"/>
+                                <L7p:TargetDataType variableDataType="message"/>
+                                <L7p:TargetVariableName stringValue="key"/>
+                                <L7p:TransformType transformType="BASE64_DECODE"/>
+                            </L7p:EncodeDecode>
+                            <L7p:HardcodedResponse>
+                                <L7p:ResponseBody><![CDATA[${key}]]></L7p:ResponseBody>
+                                <L7p:ResponseContentType stringValue="application/x-pkcs12"/>
+                            </L7p:HardcodedResponse>
+                            <L7p:AddHeader>
+                                <L7p:HeaderName stringValue="Content-Disposition"/>
+                                <L7p:HeaderValue stringValue="attachment; filename=&quot;${request.username}.p12&quot;"/>
+                                <L7p:Target target="RESPONSE"/>
+                            </L7p:AddHeader>
+                            <L7p:assertionComment>
+                                <L7p:Properties mapValue="included">
+                                    <L7p:entry>
+                                        <L7p:key stringValue="RIGHT.COMMENT"/>
+                                        <L7p:value stringValue="// Return key with signed certificate"/>
+                                    </L7p:entry>
+                                </L7p:Properties>
+                            </L7p:assertionComment>
+                        </wsp:All>
+                        <L7p:assertionComment>
+                            <L7p:Properties mapValue="included">
+                                <L7p:entry>
+                                    <L7p:key stringValue="RIGHT.COMMENT"/>
+                                    <L7p:value stringValue="// User is authorized and code is valid"/>
+                                </L7p:entry>
+                            </L7p:Properties>
+                        </L7p:assertionComment>
+                    </wsp:All>
+                    <wsp:All wsp:Usage="Required">
+                        <L7p:HardcodedResponse>
+                            <L7p:AssertionComment assertionComment="included">
+                                <L7p:Properties mapValue="included">
+                                    <L7p:entry>
+                                        <L7p:key stringValue="RIGHT.COMMENT"/>
+                                        <L7p:value stringValue="// Return HTTP 302 redirect response"/>
+                                    </L7p:entry>
+                                </L7p:Properties>
+                            </L7p:AssertionComment>
+                            <L7p:ResponseStatus stringValue="302"/>
+                        </L7p:HardcodedResponse>
+                        <L7p:AddHeader>
+                            <L7p:HeaderName stringValue="Location"/>
+                            <L7p:HeaderValue stringValue="http://${request.url.host}/proxy/access/denied"/>
+                            <L7p:Target target="RESPONSE"/>
+                        </L7p:AddHeader>
+                        <L7p:assertionComment>
+                            <L7p:Properties mapValue="included">
+                                <L7p:entry>
+                                    <L7p:key stringValue="RIGHT.COMMENT"/>
+                                    <L7p:value stringValue="// Redirect to access denied page"/>
+                                </L7p:entry>
+                            </L7p:Properties>
+                        </L7p:assertionComment>
+                    </wsp:All>
+                    <L7p:assertionComment>
+                        <L7p:Properties mapValue="included">
+                            <L7p:entry>
+                                <L7p:key stringValue="RIGHT.COMMENT"/>
+                                <L7p:value stringValue="// Either user is authorized and code is valid; or server redirect to access denied page"/>
+                            </L7p:entry>
+                        </L7p:Properties>
+                    </L7p:assertionComment>
+                </wsp:OneOrMore>
+                <L7p:assertionComment>
+                    <L7p:Properties mapValue="included">
+                        <L7p:entry>
+                            <L7p:key stringValue="RIGHT.COMMENT"/>
+                            <L7p:value stringValue="// Proxy post submit validation code page"/>
+                        </L7p:entry>
+                    </L7p:Properties>
+                </L7p:assertionComment>
+            </wsp:All>
+            <wsp:All wsp:Usage="Required">
+                <L7p:ComparisonAssertion>
+                    <L7p:CaseSensitive booleanValue="false"/>
+                    <L7p:Expression1 stringValue="${exitPolicy}"/>
+                    <L7p:Operator operatorNull="null"/>
+                    <L7p:Predicates predicates="included">
+                        <L7p:item dataType="included">
+                            <L7p:Type variableDataType="boolean"/>
+                        </L7p:item>
+                        <L7p:item binary="included">
+                            <L7p:CaseSensitive booleanValue="false"/>
+                            <L7p:RightValue stringValue="false"/>
+                        </L7p:item>
+                    </L7p:Predicates>
+                </L7p:ComparisonAssertion>
+                <wsp:OneOrMore wsp:Usage="Required">
+                    <wsp:All wsp:Usage="Required">
+                        <L7p:SslAssertion>
+                            <L7p:RequireClientAuthentication booleanValue="true"/>
+                        </L7p:SslAssertion>
+                        <L7p:Authentication>
+                            <L7p:IdentityProviderOid goidValue="e7400e8803fc3059fc30722139571827"/>
+                        </L7p:Authentication>
+                        <L7p:assertionComment>
+                            <L7p:Properties mapValue="included">
+                                <L7p:entry>
+                                    <L7p:key stringValue="RIGHT.COMMENT"/>
+                                    <L7p:value stringValue="// User sent trusted certificate via mutual auth SSL"/>
+                                </L7p:entry>
+                            </L7p:Properties>
+                        </L7p:assertionComment>
+                    </wsp:All>
+                    <wsp:OneOrMore wsp:Usage="Required">
+                        <wsp:All wsp:Usage="Required">
+                            <L7p:ComparisonAssertion>
+                                <L7p:CaseSensitive booleanValue="false"/>
+                                <L7p:Expression1 stringValue="${request.url.protocol}"/>
+                                <L7p:Expression2 stringValue="HTTP"/>
+                                <L7p:Predicates predicates="included">
+                                    <L7p:item binary="included">
+                                        <L7p:CaseSensitive booleanValue="false"/>
+                                        <L7p:RightValue stringValue="HTTP"/>
+                                    </L7p:item>
+                                </L7p:Predicates>
+                            </L7p:ComparisonAssertion>
+                            <L7p:SetVariable>
+                                <L7p:Expression><![CDATA[true]]></L7p:Expression>
+                                <L7p:VariableToSet stringValue="exitPolicy"/>
+                            </L7p:SetVariable>
+                            <L7p:HardcodedResponse>
+                                <L7p:AssertionComment assertionComment="included">
+                                    <L7p:Properties mapValue="included">
+                                        <L7p:entry>
+                                            <L7p:key stringValue="RIGHT.COMMENT"/>
+                                            <L7p:value stringValue="// Return HTTP 302 redirect response"/>
+                                        </L7p:entry>
+                                    </L7p:Properties>
+                                </L7p:AssertionComment>
+                                <L7p:ResponseStatus stringValue="302"/>
+                            </L7p:HardcodedResponse>
+                            <L7p:AddHeader>
+                                <L7p:HeaderName stringValue="Location"/>
+                                <L7p:HeaderValue stringValue="https://${request.url.host}${request.url.path}${request.url.query}"/>
+                                <L7p:Target target="RESPONSE"/>
+                            </L7p:AddHeader>
+                            <L7p:assertionComment>
+                                <L7p:Properties mapValue="included">
+                                    <L7p:entry>
+                                        <L7p:key stringValue="RIGHT.COMMENT"/>
+                                        <L7p:value stringValue="// Redirect to HTTPS"/>
+                                    </L7p:entry>
+                                </L7p:Properties>
+                            </L7p:assertionComment>
+                        </wsp:All>
+                        <wsp:All wsp:Usage="Required">
+                            <L7p:ComparisonAssertion>
+                                <L7p:CaseSensitive booleanValue="false"/>
+                                <L7p:Expression1 stringValue="${request.url.protocol}"/>
+                                <L7p:Expression2 stringValue="HTTPS"/>
+                                <L7p:Predicates predicates="included">
+                                    <L7p:item binary="included">
+                                        <L7p:CaseSensitive booleanValue="false"/>
+                                        <L7p:RightValue stringValue="HTTPS"/>
+                                    </L7p:item>
+                                </L7p:Predicates>
+                            </L7p:ComparisonAssertion>
+                            <L7p:SetVariable>
+                                <L7p:Expression><![CDATA[true]]></L7p:Expression>
+                                <L7p:VariableToSet stringValue="exitPolicy"/>
+                            </L7p:SetVariable>
+                            <L7p:HardcodedResponse>
+                                <L7p:AssertionComment assertionComment="included">
+                                    <L7p:Properties mapValue="included">
+                                        <L7p:entry>
+                                            <L7p:key stringValue="RIGHT.COMMENT"/>
+                                            <L7p:value stringValue="// Return HTTP 302 redirect response"/>
+                                        </L7p:entry>
+                                    </L7p:Properties>
+                                </L7p:AssertionComment>
+                                <L7p:ResponseStatus stringValue="302"/>
+                            </L7p:HardcodedResponse>
+                            <L7p:AddHeader>
+                                <L7p:HeaderName stringValue="Location"/>
+                                <L7p:HeaderValue stringValue="https://${request.url.host}/proxy/code/request"/>
+                                <L7p:Target target="RESPONSE"/>
+                            </L7p:AddHeader>
+                            <L7p:assertionComment>
+                                <L7p:Properties mapValue="included">
+                                    <L7p:entry>
+                                        <L7p:key stringValue="RIGHT.COMMENT"/>
+                                        <L7p:value stringValue="// Redirect to request validation code page"/>
+                                    </L7p:entry>
+                                </L7p:Properties>
+                            </L7p:assertionComment>
+                        </wsp:All>
+                        <L7p:assertionComment>
+                            <L7p:Properties mapValue="included">
+                                <L7p:entry>
+                                    <L7p:key stringValue="RIGHT.COMMENT"/>
+                                    <L7p:value stringValue="// Or redirect to HTTPS or to the request validation code page"/>
+                                </L7p:entry>
+                            </L7p:Properties>
+                        </L7p:assertionComment>
+                    </wsp:OneOrMore>
+                </wsp:OneOrMore>
+                <wsp:OneOrMore wsp:Usage="Required">
+                    <L7p:ComparisonAssertion>
+                        <L7p:CaseSensitive booleanValue="false"/>
+                        <L7p:Expression1 stringValue="${exitPolicy}"/>
+                        <L7p:Operator operatorNull="null"/>
+                        <L7p:Predicates predicates="included">
+                            <L7p:item dataType="included">
+                                <L7p:Type variableDataType="boolean"/>
+                            </L7p:item>
+                            <L7p:item binary="included">
+                                <L7p:CaseSensitive booleanValue="false"/>
+                                <L7p:RightValue stringValue="true"/>
+                            </L7p:item>
+                        </L7p:Predicates>
+                    </L7p:ComparisonAssertion>
+                    <wsp:All wsp:Usage="Required">
+                        <L7p:CommentAssertion>
+                            <L7p:Comment stringValue="Disabled to pass through NTLM authentication required by the Live Link application on the backend"/>
+                        </L7p:CommentAssertion>
+                        <L7p:CommentAssertion>
+                            <L7p:Comment stringValue="Gateway provides one factor, mutual auth SSL with trusted client certificate"/>
+                        </L7p:CommentAssertion>
+                        <L7p:CommentAssertion>
+                            <L7p:Comment stringValue="Live Link provides other factor, NTLM authentication"/>
+                        </L7p:CommentAssertion>
+                        <L7p:HttpBasic>
+                            <L7p:Enabled booleanValue="false"/>
+                        </L7p:HttpBasic>
+                        <L7p:Authentication>
+                            <L7p:IdentityProviderName stringValue="Internal Identity Provider"/>
+                            <L7p:Enabled booleanValue="false"/>
+                        </L7p:Authentication>
+                        <wsp:All wsp:Usage="Required">
+                            <L7p:SetVariable>
+                                <L7p:Expression><![CDATA[false]]></L7p:Expression>
+                                <L7p:VariableToSet stringValue="response.cookie.overwritePath"/>
+                            </L7p:SetVariable>
+                            <L7p:SetVariable>
+                                <L7p:Expression><![CDATA[${request.url.query}]]></L7p:Expression>
+                                <L7p:VariableToSet stringValue="query"/>
+                            </L7p:SetVariable>
+                            <L7p:SetVariable>
+                                <L7p:Expression><![CDATA[10.200.75.60]]></L7p:Expression>
+                                <L7p:VariableToSet stringValue="webAppHost"/>
+                            </L7p:SetVariable>
+                            <L7p:SetVariable>
+                                <L7p:Expression><![CDATA[${request.url.host}]]></L7p:Expression>
+                                <L7p:VariableToSet stringValue="requestHost"/>
+                            </L7p:SetVariable>
+                            <L7p:SetVariable>
+                                <L7p:Expression><![CDATA[false]]></L7p:Expression>
+                                <L7p:VariableToSet stringValue="response.cookie.overwriteDomain"/>
+                            </L7p:SetVariable>
+                        </wsp:All>
+                        <L7p:Regex>
+                            <L7p:AssertionComment assertionComment="included">
+                                <L7p:Properties mapValue="included">
+                                    <L7p:entry>
+                                        <L7p:key stringValue="RIGHT.COMMENT"/>
+                                        <L7p:value stringValue="// REWRITE REQUEST QUERY"/>
+                                    </L7p:entry>
+                                </L7p:Properties>
+                            </L7p:AssertionComment>
+                            <L7p:AutoTarget booleanValue="false"/>
+                            <L7p:CaseInsensitive booleanValue="true"/>
+                            <L7p:OtherTargetMessageVariable stringValue="query"/>
+                            <L7p:PatternContainsVariables booleanValue="true"/>
+                            <L7p:Regex stringValue="${requestHost}"/>
+                            <L7p:Replace booleanValue="true"/>
+                            <L7p:Replacement stringValue="${webAppHost}"/>
+                            <L7p:Target target="OTHER"/>
+                        </L7p:Regex>
+                        <L7p:Regex>
+                            <L7p:AssertionComment assertionComment="included">
+                                <L7p:Properties mapValue="included">
+                                    <L7p:entry>
+                                        <L7p:key stringValue="RIGHT.COMMENT"/>
+                                        <L7p:value stringValue="// REWRITE REQUEST BODY"/>
+                                    </L7p:entry>
+                                </L7p:Properties>
+                            </L7p:AssertionComment>
+                            <L7p:AutoTarget booleanValue="false"/>
+                            <L7p:CaseInsensitive booleanValue="true"/>
+                            <L7p:PatternContainsVariables booleanValue="true"/>
+                            <L7p:Regex stringValue="${requestHost}"/>
+                            <L7p:Replace booleanValue="true"/>
+                            <L7p:Replacement stringValue="${webAppHost}"/>
+                        </L7p:Regex>
+                        <L7p:ManageCookie>
+                            <L7p:AssertionComment assertionComment="included">
+                                <L7p:Properties mapValue="included">
+                                    <L7p:entry>
+                                        <L7p:key stringValue="RIGHT.COMMENT"/>
+                                        <L7p:value stringValue="// REWRITE REQUEST COOKIE DOMAINS"/>
+                                    </L7p:entry>
+                                </L7p:Properties>
+                            </L7p:AssertionComment>
+                            <L7p:CookieAttributes mapValue="included">
+                                <L7p:entry>
+                                    <L7p:key stringValue="domain"/>
+                                    <L7p:value nameValuePair="included">
+                                        <L7p:Key stringValue="domain"/>
+                                        <L7p:Value stringValue="${webAppHost}"/>
+                                    </L7p:value>
+                                </L7p:entry>
+                            </L7p:CookieAttributes>
+                            <L7p:CookieCriteria mapValue="included">
+                                <L7p:entry>
+                                    <L7p:key stringValue="domain"/>
+                                    <L7p:value cookieCriteria="included">
+                                        <L7p:Key stringValue="domain"/>
+                                        <L7p:Value stringValue="${request.url.host}"/>
+                                    </L7p:value>
+                                </L7p:entry>
+                            </L7p:CookieCriteria>
+                            <L7p:Operation operation="UPDATE"/>
+                        </L7p:ManageCookie>
+                        <L7p:AddHeader>
+                            <L7p:AssertionComment assertionComment="included">
+                                <L7p:Properties mapValue="included">
+                                    <L7p:entry>
+                                        <L7p:key stringValue="RIGHT.COMMENT"/>
+                                        <L7p:value stringValue="// REWRITE HOST HEADER"/>
+                                    </L7p:entry>
+                                </L7p:Properties>
+                            </L7p:AssertionComment>
+                            <L7p:HeaderName stringValue="Host"/>
+                            <L7p:HeaderValue stringValue="${requestHost}"/>
+                            <L7p:RemoveExisting booleanValue="true"/>
+                        </L7p:AddHeader>
+                        <L7p:HttpRoutingAssertion>
+                            <L7p:FailOnErrorStatus booleanValue="false"/>
+                            <L7p:ProtectedServiceUrl stringValue="https://${webAppHost}${request.url.path}${query}"/>
+                            <L7p:ProxyPassword stringValueNull="null"/>
+                            <L7p:ProxyUsername stringValueNull="null"/>
+                            <L7p:RequestHeaderRules httpPassthroughRuleSet="included">
+                                <L7p:ForwardAll booleanValue="true"/>
+                                <L7p:Rules httpPassthroughRules="included"/>
+                            </L7p:RequestHeaderRules>
+                            <L7p:RequestParamRules httpPassthroughRuleSet="included">
+                                <L7p:ForwardAll booleanValue="true"/>
+                                <L7p:Rules httpPassthroughRules="included"/>
+                            </L7p:RequestParamRules>
+                            <L7p:ResponseHeaderRules httpPassthroughRuleSet="included">
+                                <L7p:ForwardAll booleanValue="true"/>
+                                <L7p:Rules httpPassthroughRules="included"/>
+                            </L7p:ResponseHeaderRules>
+                        </L7p:HttpRoutingAssertion>
+                        <L7p:ManageCookie>
+                            <L7p:AssertionComment assertionComment="included">
+                                <L7p:Properties mapValue="included">
+                                    <L7p:entry>
+                                        <L7p:key stringValue="RIGHT.COMMENT"/>
+                                        <L7p:value stringValue="// REWRITE RESPONSE COOKIE DOMAINS"/>
+                                    </L7p:entry>
+                                </L7p:Properties>
+                            </L7p:AssertionComment>
+                            <L7p:CookieAttributes mapValue="included">
+                                <L7p:entry>
+                                    <L7p:key stringValue="domain"/>
+                                    <L7p:value nameValuePair="included">
+                                        <L7p:Key stringValue="domain"/>
+                                        <L7p:Value stringValue="${request.url.host}"/>
+                                    </L7p:value>
+                                </L7p:entry>
+                            </L7p:CookieAttributes>
+                            <L7p:CookieCriteria mapValue="included">
+                                <L7p:entry>
+                                    <L7p:key stringValue="domain"/>
+                                    <L7p:value cookieCriteria="included">
+                                        <L7p:Key stringValue="domain"/>
+                                        <L7p:Value stringValue="${webAppHost}"/>
+                                    </L7p:value>
+                                </L7p:entry>
+                            </L7p:CookieCriteria>
+                            <L7p:Operation operation="UPDATE"/>
+                            <L7p:Target target="RESPONSE"/>
+                        </L7p:ManageCookie>
+                        <wsp:OneOrMore wsp:Usage="Required">
+                            <wsp:All wsp:Usage="Required">
+                                <L7p:ComparisonAssertion>
+                                    <L7p:Expression1 stringValue="${response.http.header.location}"/>
+                                    <L7p:ExpressionIsVariable booleanValue="false"/>
+                                    <L7p:Negate booleanValue="true"/>
+                                    <L7p:Operator operator="EMPTY"/>
+                                    <L7p:Predicates predicates="included">
+                                        <L7p:item binary="included">
+                                            <L7p:Negated booleanValue="true"/>
+                                            <L7p:Operator operator="EMPTY"/>
+                                        </L7p:item>
+                                    </L7p:Predicates>
+                                </L7p:ComparisonAssertion>
+                                <L7p:SetVariable>
+                                    <L7p:Expression><![CDATA[${response.http.header.location}]]></L7p:Expression>
+                                    <L7p:VariableToSet stringValue="l7_tmp_header"/>
+                                </L7p:SetVariable>
+                                <L7p:Regex>
+                                    <L7p:AutoTarget booleanValue="false"/>
+                                    <L7p:OtherTargetMessageVariable stringValue="l7_tmp_header"/>
+                                    <L7p:PatternContainsVariables booleanValue="true"/>
+                                    <L7p:Regex stringValue="${webAppHost}"/>
+                                    <L7p:Replace booleanValue="true"/>
+                                    <L7p:Replacement stringValue="${requestHost}"/>
+                                    <L7p:Target target="OTHER"/>
+                                </L7p:Regex>
+                                <L7p:AddHeader>
+                                    <L7p:HeaderName stringValue="location"/>
+                                    <L7p:HeaderValue stringValue="${l7_tmp_header}"/>
+                                    <L7p:RemoveExisting booleanValue="true"/>
+                                    <L7p:Target target="RESPONSE"/>
+                                </L7p:AddHeader>
+                            </wsp:All>
+                            <L7p:TrueAssertion/>
+                        </wsp:OneOrMore>
+                        <L7p:Regex>
+                            <L7p:AssertionComment assertionComment="included">
+                                <L7p:Properties mapValue="included">
+                                    <L7p:entry>
+                                        <L7p:key stringValue="RIGHT.COMMENT"/>
+                                        <L7p:value stringValue="// REWRITE RESPONSE BODY"/>
+                                    </L7p:entry>
+                                </L7p:Properties>
+                            </L7p:AssertionComment>
+                            <L7p:AutoTarget booleanValue="false"/>
+                            <L7p:CaseInsensitive booleanValue="true"/>
+                            <L7p:PatternContainsVariables booleanValue="true"/>
+                            <L7p:Regex stringValue="${webAppHost}"/>
+                            <L7p:Replace booleanValue="true"/>
+                            <L7p:Replacement stringValue="${requestHost}"/>
+                            <L7p:Target target="RESPONSE"/>
+                        </L7p:Regex>
+                    </wsp:All>
+                </wsp:OneOrMore>
+                <L7p:assertionComment>
+                    <L7p:Properties mapValue="included">
+                        <L7p:entry>
+                            <L7p:key stringValue="RIGHT.COMMENT"/>
+                            <L7p:value stringValue="// Other"/>
+                        </L7p:entry>
+                    </L7p:Properties>
+                </L7p:assertionComment>
+            </wsp:All>
+        </wsp:OneOrMore>
+    </wsp:All>
+</wsp:Policy>

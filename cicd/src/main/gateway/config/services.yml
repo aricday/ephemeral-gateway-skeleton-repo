@@ -1,0 +1,10 @@
+cicd/CSR Sample:
+  url: "/proxy*"
+  policy: "cicd/CSR Sample"
+  httpMethods:
+  - "DELETE"
+  - "POST"
+  - "GET"
+  - "PUT"
+  properties: {}
+  wssProcessingEnabled: false

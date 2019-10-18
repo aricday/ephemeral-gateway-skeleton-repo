@@ -1,0 +1,68 @@
+<wsp:Policy xmlns:wsp="http://schemas.xmlsoap.org/ws/2002/12/policy" xmlns:L7p="http://www.layer7tech.com/ws/policy">
+    <wsp:All wsp:Usage="Required">
+        <L7p:AuditAssertion>
+            <L7p:Enabled booleanValue="false"/>
+            <L7p:SaveRequest booleanValue="true"/>
+            <L7p:SaveResponse booleanValue="true"/>
+        </L7p:AuditAssertion>
+        <L7p:Regex>
+            <L7p:AutoTarget booleanValue="false"/>
+            <L7p:CaptureVar stringValue="regex"/>
+            <L7p:FindAll booleanValue="true"/>
+            <L7p:OtherTargetMessageVariable stringValue="request.http.uri"/>
+            <L7p:Regex stringValue="internal/direct/beers(.*)"/>
+            <L7p:RegexName stringValue="URL"/>
+            <L7p:Replacement stringValue=""/>
+            <L7p:Target target="OTHER"/>
+        </L7p:Regex>
+        <L7p:AuditDetailAssertion>
+            <L7p:Detail stringValueReference="inline"><![CDATA[request.http.uri: ${}
+regex 0 | 1: ${regex[0]} | ${regex[1]}
+${request.url.protocol}://${request.url.host}:${request.url.port}/rest/default/data/v1${regex[1]}]]></L7p:Detail>
+            <L7p:Enabled booleanValue="false"/>
+            <L7p:Level stringValue="WARNING"/>
+        </L7p:AuditDetailAssertion>
+        <L7p:HttpRoutingAssertion>
+            <L7p:ProtectedServiceUrl stringValue="https://lac.gcp.day.apim.ca.com:8083/rest/default/data/v1${regex[1]}"/>
+            <L7p:ProxyPassword stringValueNull="null"/>
+            <L7p:ProxyUsername stringValueNull="null"/>
+            <L7p:RequestHeaderRules httpPassthroughRuleSet="included">
+                <L7p:Rules httpPassthroughRules="included">
+                    <L7p:item httpPassthroughRule="included">
+                        <L7p:Name stringValue="Cookie"/>
+                    </L7p:item>
+                    <L7p:item httpPassthroughRule="included">
+                        <L7p:Name stringValue="SOAPAction"/>
+                    </L7p:item>
+                    <L7p:item httpPassthroughRule="included">
+                        <L7p:CustomizeValue stringValue="CALiveAPICreator ca-gateway:1"/>
+                        <L7p:Name stringValue="Authorization"/>
+                        <L7p:UsesCustomizedValue booleanValue="true"/>
+                    </L7p:item>
+                </L7p:Rules>
+            </L7p:RequestHeaderRules>
+            <L7p:RequestParamRules httpPassthroughRuleSet="included">
+                <L7p:ForwardAll booleanValue="true"/>
+                <L7p:Rules httpPassthroughRules="included"/>
+            </L7p:RequestParamRules>
+            <L7p:ResponseHeaderRules httpPassthroughRuleSet="included">
+                <L7p:ForwardAll booleanValue="true"/>
+                <L7p:Rules httpPassthroughRules="included">
+                    <L7p:item httpPassthroughRule="included">
+                        <L7p:Name stringValue="Set-Cookie"/>
+                    </L7p:item>
+                </L7p:Rules>
+            </L7p:ResponseHeaderRules>
+            <L7p:SamlAssertionVersion intValue="2"/>
+        </L7p:HttpRoutingAssertion>
+        <L7p:Regex>
+            <L7p:AutoTarget booleanValue="false"/>
+            <L7p:IncludeEntireExpressionCapture booleanValue="false"/>
+            <L7p:Regex stringValue="https://lac.gcp.day.apim.ca.com:8083/rest/default/data/v1"/>
+            <L7p:RegexName stringValue="rewrite responses"/>
+            <L7p:Replace booleanValue="true"/>
+            <L7p:Replacement stringValue="${request.url.protocol}://${request.url.host}:${request.url.port}/internal/direct/beers"/>
+            <L7p:Target target="RESPONSE"/>
+        </L7p:Regex>
+    </wsp:All>
+</wsp:Policy>

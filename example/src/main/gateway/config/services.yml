@@ -1,0 +1,10 @@
+example/Beers Direct:
+  url: "/internal/direct/beers*"
+  policy: "example/Beers Direct"
+  httpMethods:
+  - "DELETE"
+  - "POST"
+  - "GET"
+  - "PUT"
+  properties: {}
+  wssProcessingEnabled: false
