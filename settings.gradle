@@ -4,6 +4,6 @@
  *  of the MIT license.  See the LICENSE file for details.
  */
 
-rootProject.name = 'cicd_demo_project'
+rootProject.name = 'ephemeral-gateway-skeleton-repo'
 
 include 'deployment', 'example', 'cicd'
